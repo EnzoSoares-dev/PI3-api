@@ -1,15 +1,18 @@
 import { empresa } from "../../db/models/empresa.js"
 import { cnpj } from "cpf-cnpj-validator"
+import { generateHashPassword } from "../../Auth/hash/generate.js"
 
 export const insertEmpresa = async (req,res)=>{
     const user = req.body
     if(cnpj.isValid(user.CNPJ)){
-        if(empresa.findOne({where:{email: user.email}})===null){
+        if(await empresa.findOne({where:{email: user.email}}) === null){
             user.CNPJ = cnpj.format(user.CNPJ)
+            user.password = await generateHashPassword(user.password)
             const result = await empresa.create(user)
-            res.send({resultado: result, user: user})
+            res.send({result: result})
         }
-        res.send('Email de usuário já cadastrado')
+        else{
+            res.send('Usuário já cadastrado')
+        }
     }
-
 }

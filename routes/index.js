@@ -19,22 +19,14 @@ App.use(bodyParser.urlencoded({extended:true}))
     }
 })()
 
-const middleTeste = (req,res,next)=>{
-    console.log('teste')
-    next();
-}
-
-App.use(middleTeste)
 App.get(`/`,(req,res)=>{
     res.send('works')
 })
 
 App.get('/login', getEmpresa)
 App.post('/empresa/register',insertEmpresa)
-App.put('/empresa/update/:empresaId', async (req,res)=>{
-
-})
-App.delete('empresa/delete/:empresaId',()=>{})
+App.put('/empresa/update/:empresaId', updateEmpresa)
+App.delete('/empresa/delete/:empresaId',deleteEmpresa)
 
 App.post('/processo/create',(req,res)=>{})
 App.get('/processo',(req,res)=>{
