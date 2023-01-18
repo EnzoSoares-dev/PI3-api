@@ -1,10 +1,15 @@
-import Express from "express"
+import Express, { application } from "express"
+import bodyParser from "body-parser"
 import { cnpj } from "cpf-cnpj-validator"
-import { insert } from "../services/aplication/empresa/insert.js"
 import { Database } from "../services/db/connection.js"
-import { getEmpresa } from "../services/aplication/empresa/get.js";
+import { insertEmpresa } from "../services/controllers/empresa/insert.js"
+import { getEmpresa, getEmpresaById } from "../services/controllers/empresa/get.js"
+import { updateEmpresa } from "../services/controllers/empresa/update.js"
+import { deleteEmpresa } from "../services/controllers/empresa/delete.js"
 
 const App = Express()
+App.use(bodyParser.json())
+App.use(bodyParser.urlencoded({extended:true}))
 ;(async ()=>{
     try{
         const result = await Database.sync()
@@ -24,27 +29,11 @@ App.get(`/`,(req,res)=>{
     res.send('works')
 })
 
-App.get('/login',(req,res)=>{
-    const user = {
-        email: 'beckerltda@financeiro.com',
-        password: '123456'
-    }
-    getEmpresa(user)
-    ? res.send('erro')
-    : res.send(user)
+App.get('/login', getEmpresa)
+App.post('/empresa/register',insertEmpresa)
+App.put('/empresa/update/:empresaId', async (req,res)=>{
+
 })
-App.post('empresa/register',(req,res)=>{
-    const user={
-        name: 'becker ltda',
-        CNPJ: cnpj.generate(),
-        email: 'beckerltda@financeiro.com',
-        password: '123456'
-    }
-    insert(user)
-        ? res.send(user)
-        : res.send('')
-})
-App.put('/empresa/update/:empresaId',(req,res)=>{})
 App.delete('empresa/delete/:empresaId',()=>{})
 
 App.post('/processo/create',(req,res)=>{})

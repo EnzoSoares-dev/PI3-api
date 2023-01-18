@@ -3,11 +3,11 @@ import Sequelize from "sequelize"
 export const Database = new Sequelize(
     'enzo_database',
     'root',
-    '123456',
+    'Qu3rop4st3l.',
     {
         host: 'localhost',
         dialect: 'mysql',
-        port: '3307'
+        port: '3306'
     }
 )
 
