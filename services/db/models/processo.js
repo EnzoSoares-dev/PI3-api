@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize"
 import { Database } from "../connection.js"
-import { empresa } from "./empresa.js"
 
 export const processo = Database.define('Processos',{
         name:{

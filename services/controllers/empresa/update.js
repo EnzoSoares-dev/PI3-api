@@ -13,7 +13,7 @@ export const updateEmpresa = async (req, res) => {
     console.log(user)
     const updated = await empresa.update(user, { where: { id: req.params.empresaId } })
     updated
-    ? res.send('algo')
+    ? res.send(updated)
     : res.send(false)
 }
 export const updateEmpresaPassword = async (req,res)=>{
