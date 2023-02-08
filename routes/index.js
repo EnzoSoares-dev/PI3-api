@@ -4,6 +4,7 @@ import formidable from "formidable"
 import fs from 'fs'
 import path from 'path'
 import url from 'url'
+import cors from 'cors'
 import { generateHashPassword } from "../services/Auth/hash/generate.js"
 import { Database } from "../services/db/connection.js"
 import { insertEmpresa } from "../services/controllers/empresa/insert.js"
@@ -15,7 +16,8 @@ import { processo } from "../services/db/models/processo.js"
 
 const App = Express()
 const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname("../images");
+App.use(cors())
 App.use(Express.urlencoded({extended:true}))
 App.use(Express.static('public'))
 App.use(bodyParser.json())
@@ -39,18 +41,25 @@ App.put('/empresa/update/:empresaId', updateEmpresa)
 App.delete('/empresa/delete/:empresaId',deleteEmpresa)
 
 App.post('/processo/create/:empresaId',validateAccessToken,async (req,res)=>{
+console.log(req.body)
     const form = new formidable.IncomingForm()
-    form.parse(req,(err,fields,files)=>{
+    form.parse(req,async (err,fields,files)=>{
         const reqPath = files.image.filepath
-        const hash = generateHashPassword(Date.now().toString())
+        console.log(reqPath)
+        const hash = await generateHashPassword(Date.now().toString())
         const img = `${hash}.${files.image.mimetype.split('/')[1]}`
-        console.log(__dirname)
+        console.log("img: ",img)
         const newPath = path.join(__dirname, 'public/images/', img)
+        console.log(newPath)
         fs.rename(reqPath,newPath, (err)=>{
             if (err) throw err
         })
         const processos = {
-            ...req.body,
+            name:req.body.name,
+            description: req.body.description,
+            start_date: req.body.start_date,
+            end_date: req.body.end_date,
+            steps:req.body.steps,
             image: newPath,
             empresaId: req.params.empresaId
         }

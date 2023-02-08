@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize"
 import { Database } from "../connection.js"
 
 export const processo = Database.define('Processos',{
-        name:{
+    name:{
         type: DataTypes.STRING,
         allowNull: false,
     },
