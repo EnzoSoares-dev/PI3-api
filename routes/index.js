@@ -8,7 +8,7 @@ import cors from 'cors'
 import { generateHashPassword } from "../services/Auth/hash/generate.js"
 import { Database } from "../services/db/connection.js"
 import { insertEmpresa } from "../services/controllers/empresa/insert.js"
-import { getEmpresa, getEmpresaById } from "../services/controllers/empresa/get.js"
+import { getEmpresa } from "../services/controllers/empresa/get.js"
 import { updateEmpresa } from "../services/controllers/empresa/update.js"
 import { deleteEmpresa } from "../services/controllers/empresa/delete.js"
 import { validateAccessToken } from "../services/Auth/authToken.js"
@@ -35,16 +35,16 @@ App.get(`/`,(req,res)=>{
     res.send('works')
 })
 
-App.get('/login', getEmpresa)
+App.post('/login', getEmpresa)
 App.post('/empresa/register',insertEmpresa)
-App.put('/empresa/update/:empresaId', updateEmpresa)
-App.delete('/empresa/delete/:empresaId',deleteEmpresa)
+App.put('/empresa/update/:empresaId',validateAccessToken, updateEmpresa)
+App.delete('/empresa/delete/:empresaId', validateAccessToken, deleteEmpresa)
 
 App.post('/processo/create/:empresaId',validateAccessToken,async (req,res)=>{
 console.log(req.body)
     const form = new formidable.IncomingForm()
     form.parse(req,async (err,fields,files)=>{
-        const reqPath = files.image.filepath
+        const reqPath = files.image.path
         console.log(reqPath)
         const hash = await generateHashPassword(Date.now().toString())
         const img = `${hash}.${files.image.mimetype.split('/')[1]}`

@@ -5,6 +5,7 @@ import Jwt from "jsonwebtoken"
 import { generateHashPassword } from "../../Auth/hash/generate.js"
 
 export const insertEmpresa = async (req,res)=>{
+    console.log(req.body)
     const user = req.body
     if(cnpj.isValid(user.CNPJ)){
         if(await empresa.findOne({where:{email: user.email}}) === null){
