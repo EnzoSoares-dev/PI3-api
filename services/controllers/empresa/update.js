@@ -1,12 +1,21 @@
 import { empresa } from "../../db/models/empresa.js"
 import { getEmpresaById } from "./get.js"
+import { generateHashPassword } from "../../Auth/hash/generate.js"
 
 export const updateEmpresa = async (req, res) => {
-    console.log(req.params.empresaId)
+    console.log('id: ',req.params.empresaId)
     let user = await getEmpresaById(req.params.empresaId)
 
-    req.body.object.map((changes) => {
-        const change = JSON.parse(changes)
+    console.log(req.body)
+    const object = req.body
+    console.log(object)
+    object.map((changes) => {
+        console.log('changes: ',changes.type)
+        const change = changes
+        if(change.type === 'password'){
+            change.content = generateHashPassword(change.content)
+            user[change.type] = change.content
+        }
         user[change.type] = change.content
     })
 
@@ -15,7 +24,4 @@ export const updateEmpresa = async (req, res) => {
     updated
     ? res.send(updated)
     : res.send(false)
-}
-export const updateEmpresaPassword = async (req,res)=>{
-    let user = await getEmpresaById(req.params.empresaId)
 }

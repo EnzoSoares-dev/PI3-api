@@ -23,7 +23,6 @@ export const processo = Database.define('Processos',{
     },
     image:{
         type: DataTypes.STRING,
-        allowNull: false
     },
     empresaId:{
         type: DataTypes.INTEGER,
