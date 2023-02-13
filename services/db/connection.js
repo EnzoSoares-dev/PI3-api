@@ -3,7 +3,7 @@ import Sequelize from "sequelize"
 export const Database = new Sequelize(
     'enzo_database',
     'root',
-    'Qu3rop4st3l.',
+    '',
     {
         host: 'localhost',
         dialect: 'mysql',
